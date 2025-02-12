@@ -1,4 +1,4 @@
 [[headers]]
-  for = "/*"
-  [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'nonce-{nonce}' 'strict-dynamic' 'self' https:; object-src 'none'; frame-ancestors 'none';"
+for = "/*"
+[headers.values]
+Content-Security-Policy = "default-src 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline';"
