@@ -1,3 +1,7 @@
+# netlify.toml
+[[plugins]]
+  package = "@netlify/plugin-csp-nonce"
+  
 [[headers]]
 for = "/*"
 [headers.values]
