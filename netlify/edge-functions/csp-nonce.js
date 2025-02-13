@@ -1,6 +1,6 @@
 export default async (request, context) => {
-  // Generate a dynamic nonce per request
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  // Generate a secure nonce using crypto.randomUUID() and encode with btoa()
+  const nonce = btoa(crypto.randomUUID());
 
   // Define CSP with dynamic nonce
   const cspHeader = `
@@ -14,9 +14,9 @@ export default async (request, context) => {
     frame-src 'none';
     base-uri 'self';
     form-action 'self';
-  `.replace(/\s{2,}/g, " ").trim(); // Remove extra spaces
+  `.replace(/\s{2,}/g, " ").trim(); // Clean up spaces
 
-  // Modify the response to include CSP header
+  // Modify response headers
   const response = await context.next();
   response.headers.set("Content-Security-Policy", cspHeader);
   
