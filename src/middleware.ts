@@ -19,6 +19,4 @@ export function middleware() {
       form-action 'self';
     `.trim()
   );
-
-  return response;
 }
