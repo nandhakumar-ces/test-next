@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+/* import { NextResponse } from "next/server";
 
 export function middleware() {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
@@ -20,3 +20,4 @@ export function middleware() {
     `.trim()
   );
 }
+*/
