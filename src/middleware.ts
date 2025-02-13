@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export function middleware(req: Request) {
+export function middleware() {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   const response = NextResponse.next();
