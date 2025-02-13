@@ -1,3 +1,19 @@
 # netlify.toml
 [[plugins]]
   package = "@netlify/plugin-csp-nonce"
+
+[[headers]]
+for = "/*"
+[headers.values]
+  Content-Security-Policy = """
+    default-src 'self';
+    object-src 'none';
+    script-src 'self' 'nonce-NETLIFY';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data:;
+    font-src 'self' data:;
+    connect-src 'self' https:;
+    frame-src 'none';
+    base-uri 'self';
+    form-action 'self';
+  """
