@@ -1,2 +1,3 @@
-[[plugins]]
-  package = "/plugins/netlify-plugin-csp"
+[[edge_functions]]
+  path = "/*"
+  function = "csp-nonce"
