@@ -5,7 +5,7 @@
 [[headers]]
 for = "/*"
 [headers.values]
-  Content-Security-Policy = """
+  Content-Security-Policy-Report-Only = """
     default-src 'self';
     object-src 'none';
     script-src 'self' 'nonce-NETLIFY';
