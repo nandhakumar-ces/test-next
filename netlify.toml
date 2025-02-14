@@ -1,1 +1,13 @@
+[[plugins]]
+  package = "@netlify/plugin-csp-nonce"
+  [plugins.inputs]
+    reportOnly = false
+    excludedPath = [
+      "/api/*",
+      "**/*.bespoke.extension"
+    ]
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+     Content-Security-Policy = "img-src 'self' blob: data:; upgrade-insecure-requests; script-src  'sha256-test'"
