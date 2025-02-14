@@ -1,3 +1,12 @@
+[[plugins]]
+  package = "@netlify/plugin-csp-nonce"
+  [plugins.inputs]
+    reportOnly = false
+    excludedPath = [
+      "/api/*",
+      "**/*.bespoke.extension"
+    ]
+
 [[edge_functions]]
   function = "csp"
   path = "/*"
