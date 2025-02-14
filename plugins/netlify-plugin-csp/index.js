@@ -1,5 +1,5 @@
 export default {
-  onBuild({ response }) {
+  onPostBuild({ response }) {
     // Generate a random nonce
     const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
