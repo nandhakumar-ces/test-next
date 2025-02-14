@@ -1,4 +1,3 @@
-[[headers]]
-  for = "/*"
-[headers.values]
-  Content-Security-Policy = "object-src 'none'; script-src 'sha256-test';"
+[[edge_functions]]
+  function = "csp"
+  path = "/*"
