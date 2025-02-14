@@ -1,2 +1,2 @@
 /*
-  Content-Security-Policy: img-src 'self' blob: data:; upgrade-insecure-requests; script-src 'sha256-test'
+  Content-Security-Policy: img-src 'self' blob: data:; script-src 'sha256-test'
