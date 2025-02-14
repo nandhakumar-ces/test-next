@@ -1,6 +1,7 @@
 [[plugins]]
   package = "@netlify/plugin-csp-nonce"
   [plugins.inputs]
+    path = "/*"
     reportOnly = false
     excludedPath = [
       "/api/*",
