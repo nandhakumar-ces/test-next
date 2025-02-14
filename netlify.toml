@@ -1,2 +1,13 @@
 [[plugins]]
-package = "/plugins/netlify-plugin-csp"
+  package = "@netlify/plugin-csp-nonce"
+  [plugins.inputs]
+    path = "/*"
+    reportOnly = false
+    cspDirectives = {       
+      "default-src" = "'self'",       
+      "script-src" = "'self' 'nonce-{{nonce}}'",      
+      "style-src" = "'self' 'unsafe-inline'",      
+      "img-src" = "'self' https://trusted-image-source.com",       
+      "object-src" = "'none'", 
+      "frame-src" = "'none'" 
+    }
