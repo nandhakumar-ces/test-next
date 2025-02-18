@@ -16,18 +16,25 @@ type Params = {
   self?: boolean;
   https?: boolean;
   http?: boolean;
+  imgSrc?: string[];
+  styleSrc?: string[];
+  fontSrc?: string[];
+  objectSrc?: string[];
 };
 
-const params = {} as Params;
-// params.reportUri = params.reportUri || "/.netlify/functions/__csp-violations";
-// @ts-ignore
-// params.distribution = Netlify.env.get("CSP_NONCE_DISTRIBUTION");
+const params = {
+  strictDynamic: true,
+  unsafeInline: true,
+  self: true,
+  https: true,
+  http: true,
 
-params.strictDynamic = true;
-params.unsafeInline = true;
-params.self = true;
-params.https = true;
-params.http = true;
+  // Add other CSP directives
+  imgSrc: ["'self'", "https://cdn.example.com"],
+  styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+  fontSrc: ["'self'", "https://fonts.gstatic.com"],
+  objectSrc: ["'none'"],
+} as Params;
 
 const handler = async (_request: Request, context: Context) => {
   try {
