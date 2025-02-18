@@ -16,10 +16,6 @@ type Params = {
   self?: boolean;
   https?: boolean;
   http?: boolean;
-  imgSrc?: string[];
-  styleSrc?: string[];
-  fontSrc?: string[];
-  objectSrc?: string[];
 };
 
 const params = {
@@ -28,30 +24,35 @@ const params = {
   self: true,
   https: true,
   http: true,
-
-  // Add other CSP directives
-  imgSrc: ["'self'", "https://cdn.example.com"],
-  styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-  fontSrc: ["'self'", "https://fonts.gstatic.com"],
-  objectSrc: ["'none'"],
 } as Params;
 
 const handler = async (_request: Request, context: Context) => {
   try {
     const response = await context.next();
-    // for debugging which routes use this edge function
     response.headers.set("x-debug-csp-nonce", "invoked");
-    return csp(response, params);
+
+    // First, let csp() apply its transformation
+    const transformedResponse = await csp(response, params);
+
+    // Extract the dynamically generated CSP header
+    const transformedCSP = transformedResponse.headers.get("Content-Security-Policy") || "";
+
+    // Define other CSP directives (excluding script-src)
+    const additionalCSPDirectives = [
+      "default-src 'self'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "object-src 'none'",
+    ].join("; ");
+
+    // Merge transformed script-src with other directives
+    const finalCSP = `${transformedCSP}; ${additionalCSPDirectives}`;
+
+    // Set the final CSP header
+    transformedResponse.headers.set("Content-Security-Policy", finalCSP);
+
+    return transformedResponse;
   } catch {
-    /*
-      We catch all the throws and return undefined
-      The reason we do this is because returning undefined
-      will cause the next edge function in the chain to be
-      executed.
-      This is equivalent to setting the Edge Function's 
-      `config.onError` property to "bypass", but is handled 
-      completely by the Edge Function instead of by something else.
-    */
     return void 0;
   }
 };
