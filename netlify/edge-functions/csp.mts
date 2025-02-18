@@ -40,8 +40,8 @@ const handler = async (_request: Request, context: Context) => {
     // Define other CSP directives (excluding script-src)
     const additionalCSPDirectives = [
       "default-src 'self'",
-      "style-src https://fonts.googleapis.com",
-      "font-src https://fonts.gstatic.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
       "object-src 'none'",
     ].join("; ");
 
