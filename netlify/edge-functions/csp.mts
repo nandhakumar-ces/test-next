@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
-import type { Context } from 'https://edge.netlify.com';
+import type { Config, Context } from 'https://edge.netlify.com';
 // @ts-ignore
 import { csp } from "https://deno.land/x/csp_nonce_html_transformer@v2.2.2/src/index-embedded-wasm.ts";
 
@@ -55,6 +55,13 @@ const handler = async (_request: Request, context: Context) => {
     console.error("Edge function error:", error);
     return void 0;
   }
+};
+
+export const config: Config = {
+  path: "/*",
+  handler,
+  onError: "bypass",
+  method: "GET",
 };
 
 export default handler;
