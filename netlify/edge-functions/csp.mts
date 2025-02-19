@@ -16,9 +16,11 @@ const cspConfig = {
 
 // Additional CSP directives
 const cspExtensions = [
-  "default-src 'none'",  
-  "object-src 'none'",
-  "img-src 'self' https://trusted-images.example.com",
+    "default-src 'none'",
+    "style-src 'self'",
+    "font-src 'self'",
+    "object-src 'none'",
+    "img-src 'self'",
 ].join("; ");
 
 
