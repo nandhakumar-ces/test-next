@@ -4,4 +4,4 @@
     reportOnly = false
 
 [[plugins]]
-  package = "/plugins/netlify-csp-plugin"
+  package = "/plugins/netlify-plugin-csp"
