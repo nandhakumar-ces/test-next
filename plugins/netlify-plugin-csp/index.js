@@ -2,13 +2,13 @@ import { promises as fs } from "fs";
 import path from "path";
 
 export const onPostBuild = async ({ constants }) => {
-  console.log("🔐 Merging CSP directives...");
+  console.log("🔐 Merging CSP directives for top-level HTML documents...");
 
   const PUBLISH_DIR = constants.PUBLISH_DIR; // Path to built site files
   const headersFile = path.join(PUBLISH_DIR, "_headers");
 
   try {
-    // ✅ Read the existing `_headers` file (set by `@netlify/plugin-csp-nonce`)
+    // ✅ Read the existing `_headers` file
     let headersContent = await fs.readFile(headersFile, "utf8").catch(() => "");
 
     // ✅ Extract the existing `script-src` policy from CSP header
@@ -35,21 +35,21 @@ export const onPostBuild = async ({ constants }) => {
       ? existingCSP + "; " + additionalCSPDirectives
       : additionalCSPDirectives;
 
-    // ✅ Append our new CSP rules without removing `script-src`
+    // ✅ Modify `_headers` to apply CSP **only to HTML files**
     let updatedHeaders = headersContent.replace(
       /Content-Security-Policy: [^\n]+/,
       `Content-Security-Policy: ${finalCSP}`
     );
 
-    // ✅ If no CSP header exists, add a new one
+    // ✅ If no CSP header exists, add a new one **only for HTML pages**
     if (!cspMatch) {
-      updatedHeaders += `\n/*\n  Content-Security-Policy: ${finalCSP}\n`;
+      updatedHeaders += `\n/*.html\n  Content-Security-Policy: ${finalCSP}\n`;
     }
 
-    // ✅ Write updated `_headers` file with merged CSP
+    // ✅ Write updated `_headers` file
     await fs.writeFile(headersFile, updatedHeaders, "utf8");
 
-    console.log("✅ CSP successfully merged and updated.");
+    console.log("✅ CSP successfully merged and applied only to top-level HTML documents.");
   } catch (error) {
     console.error("❌ Error merging CSP directives:", error);
   }
