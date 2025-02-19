@@ -4,28 +4,28 @@ import { csp } from "https://deno.land/x/csp_nonce_html_transformer@v2.2.2/src/i
 
 export const handler = async (event) => {
   try {
-    // Correctly reconstruct the full URL from the request event
-    const siteUrl = process.env.URL || "https://your-site.netlify.app"; // Replace if needed
+    // Construct the correct request URL
+    const siteUrl = process.env.URL || "https://nandha-test.netlify.app";
     const requestUrl = new URL(event.path, siteUrl).href;
 
     console.log("Processing request for:", requestUrl);
 
-    // Fetch original response (forward the request)
+    // Fetch the original request (since Netlify Functions don't auto-forward requests)
     const response = await fetch(requestUrl);
     if (!response.ok) {
       throw new Error(`Failed to fetch original page: ${response.status}`);
     }
 
-    // Ensure it's an HTML response before modifying
+    // Ensure it's an HTML response before modifying headers
     const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("text/html")) {
-      return response; // Skip non-HTML files (CSS, fonts, JS, etc.)
+      return response; // Skip non-HTML responses
     }
 
-    // Read the body (must be done before modifying headers)
+    // Read the response body before modifying it
     const body = await response.text();
 
-    // Apply CSP transformation for script-src nonce
+    // Apply CSP nonce transformation
     const params = {
       strictDynamic: true,
       unsafeInline: true,
@@ -35,10 +35,10 @@ export const handler = async (event) => {
     };
     const transformedResponse = await csp(new Response(body, response), params);
 
-    // Extract dynamically generated script-src policy
+    // Extract the dynamically generated CSP policy
     const transformedCSP = transformedResponse.headers.get("Content-Security-Policy") || "";
 
-    // Define additional CSP directives
+    // Define additional CSP rules
     const additionalCSPDirectives = [
       "default-src 'self'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
@@ -51,10 +51,10 @@ export const handler = async (event) => {
       "form-action 'self'",
     ].join("; ");
 
-    // Merge script-src nonce with other directives
+    // Merge script-src nonce with other CSP rules
     const finalCSP = `${transformedCSP}; ${additionalCSPDirectives}`;
 
-    // Clone response and modify headers
+    // Create a new response with modified CSP headers
     return new Response(body, {
       status: 200,
       headers: new Headers({
