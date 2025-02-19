@@ -2,22 +2,25 @@ import { promises as fs } from "fs";
 import path from "path";
 
 export const onPostBuild = async ({ constants }) => {
-  console.log("🔐 Merging CSP directives for top-level HTML documents...");
+  console.log("🔐 Ensuring CSP is correctly merged for top-level HTML documents...");
 
   const PUBLISH_DIR = constants.PUBLISH_DIR; // Path to built site files
   const headersFile = path.join(PUBLISH_DIR, "_headers");
 
   try {
-    // ✅ Read the existing `_headers` file
+    // ✅ Wait for `_headers` to be fully modified before reading
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // ✅ Read the final `_headers` file (set by `@netlify/plugin-csp-nonce` and others)
     let headersContent = await fs.readFile(headersFile, "utf8").catch(() => "");
 
-    // ✅ Extract the existing `script-src` policy from CSP header
+    // ✅ Extract the existing `script-src` policy from CSP header (set by `@netlify/plugin-csp-nonce`)
     const cspMatch = headersContent.match(/Content-Security-Policy: ([^\n]+)/);
     let existingCSP = cspMatch ? cspMatch[1] : "";
 
-    console.log("Existing CSP:", existingCSP);
+    console.log("🚀 Existing CSP from `@netlify/plugin-csp-nonce`:", existingCSP);
 
-    // ✅ Define additional CSP directives (excluding `script-src`, since it's handled by Netlify's plugin)
+    // ✅ Define additional CSP directives (excluding `script-src`)
     const additionalCSPDirectives = [
       "default-src 'self'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
@@ -30,7 +33,7 @@ export const onPostBuild = async ({ constants }) => {
       "form-action 'self'",
     ].join("; ");
 
-    // ✅ Ensure `script-src` from `@netlify/plugin-csp-nonce` is preserved
+    // ✅ Ensure `script-src` from `@netlify/plugin-csp-nonce` is merged properly
     let finalCSP = existingCSP.includes("script-src")
       ? existingCSP + "; " + additionalCSPDirectives
       : additionalCSPDirectives;
