@@ -1,6 +1,6 @@
 // netlify/csp-middleware.ts
 
-import type { Config, Context } from "netlify:edge";
+import type { Config, Context } from 'https://edge.netlify.com';
 import { csp } from "https://deno.land/x/csp_nonce_html_transformer@v2.2.2/src/index-embedded-wasm.ts";
 
 // Define CSP parameters for dynamic nonce injection.
