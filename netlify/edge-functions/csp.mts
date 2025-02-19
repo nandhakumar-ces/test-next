@@ -17,7 +17,7 @@ const cspConfig = {
 // Additional CSP directives
 const cspExtensions = [
     "default-src 'none'",
-    "style-src 'self'",
+    "style-src 'self' 'unsafe-inline'",
     "font-src 'self'",
     "object-src 'none'",
     "img-src 'self'",
