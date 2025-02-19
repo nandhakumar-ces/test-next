@@ -1,17 +1,29 @@
-import { Config, Context } from "@netlify/functions";
+import { Config } from "@netlify/functions";
 // @ts-ignore
 import { csp } from "https://deno.land/x/csp_nonce_html_transformer@v2.2.2/src/index-embedded-wasm.ts";
 
-export default async (req: Request, context: Context) => {
+export const handler = async (event) => {
   try {
-    // Fetch the original request
-    const response = await fetch(req.rawUrl);
+    // Correctly reconstruct the full URL from the request event
+    const siteUrl = process.env.URL || "https://your-site.netlify.app"; // Replace if needed
+    const requestUrl = new URL(event.path, siteUrl).href;
+
+    console.log("Processing request for:", requestUrl);
+
+    // Fetch original response (forward the request)
+    const response = await fetch(requestUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch original page: ${response.status}`);
+    }
 
     // Ensure it's an HTML response before modifying
     const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("text/html")) {
-      return response; // Skip non-HTML responses (CSS, fonts, JS, etc.)
+      return response; // Skip non-HTML files (CSS, fonts, JS, etc.)
     }
+
+    // Read the body (must be done before modifying headers)
+    const body = await response.text();
 
     // Apply CSP transformation for script-src nonce
     const params = {
@@ -21,7 +33,7 @@ export default async (req: Request, context: Context) => {
       https: true,
       http: true,
     };
-    const transformedResponse = await csp(response, params);
+    const transformedResponse = await csp(new Response(body, response), params);
 
     // Extract dynamically generated script-src policy
     const transformedCSP = transformedResponse.headers.get("Content-Security-Policy") || "";
@@ -42,26 +54,26 @@ export default async (req: Request, context: Context) => {
     // Merge script-src nonce with other directives
     const finalCSP = `${transformedCSP}; ${additionalCSPDirectives}`;
 
-    // ✅ Correct way to modify response (clone the response and add headers)
-    const modifiedResponse = new Response(await transformedResponse.text(), {
-      status: transformedResponse.status,
-      statusText: transformedResponse.statusText,
+    // Clone response and modify headers
+    return new Response(body, {
+      status: 200,
       headers: new Headers({
-        ...Object.fromEntries(transformedResponse.headers.entries()), // Copy existing headers
+        "Content-Type": "text/html",
         "Content-Security-Policy": finalCSP,
         "x-debug-csp-nonce": "invoked",
       }),
     });
 
-    return modifiedResponse;
-
   } catch (error) {
-    console.error("Function error:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    console.error("CSP Function Error:", error);
+    return {
+      statusCode: 500,
+      body: "Internal Server Error",
+    };
   }
 };
 
-// ✅ Path configuration is correct, no need to modify this
+// Apply the function to all pages
 export const config: Config = {
   path: "/*"
 };
