@@ -4,7 +4,7 @@ import { Config, Context } from "@netlify/functions";
 
 export default async (req: Request, context: Context) => {
   try {
-    const response = await context.next();
+    const response = await fetch(req.rawUrl);
 
     response.headers.set("x-debug-csp-nonce", "invoked");
 
