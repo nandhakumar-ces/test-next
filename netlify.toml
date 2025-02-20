@@ -1,9 +1,2 @@
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'nonce-{{nonce}}'; object-src 'none'; img-src 'self' https://trusted-images.example.com; connect-src 'self';"
-
 [[plugins]]
-  package = "@netlify/plugin-csp-nonce"
-  [plugins.inputs]
-    reportOnly = false
+  package = "/plugins/netlify-plugin-csp"
