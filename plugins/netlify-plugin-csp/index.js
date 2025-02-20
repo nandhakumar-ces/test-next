@@ -1,5 +1,5 @@
 export default {
-  onPostBuild({ netlifyConfig }) {
+  onEnd({ netlifyConfig }) {
     console.log(netlifyConfig, "Netlify Configurations........");
     // 1. Read existing headers (possibly updated by the previous plugin)
     const { headers } = netlifyConfig;
