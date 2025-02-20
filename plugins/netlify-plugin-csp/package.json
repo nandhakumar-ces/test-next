@@ -1,5 +1,5 @@
 {
-  "name": "netlify-plugin-csp-nonce-merge",
+  "name": "netlify-plugin-csp",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
