@@ -8,6 +8,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next(); // Skip middleware for non-HTML requests
   }
 
+  console.log("Generating CSP Secure Nonce....")
+
   // Generate a secure nonce
   const array = new Uint8Array(16);
   crypto.getRandomValues(array);
@@ -30,6 +32,8 @@ export function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-nonce', nonce);
   requestHeaders.set('Content-Security-Policy', cspHeader);
+
+  console.log("CSP Headers....")
 
   const response = NextResponse.next({
     request: { headers: requestHeaders },
