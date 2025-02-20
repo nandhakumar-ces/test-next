@@ -23,19 +23,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const nonce = (await headers()).get('x-nonce') || ''
   
   return (
     <html lang="en">
-      <head>
-        <meta property="csp-nonce" content={nonce} />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: `console.log("CSP with Nonce!");` }} />
       </body>
     </html>
   );
