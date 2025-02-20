@@ -1,7 +1,6 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    # Define your static CSP header with a nonce placeholder.
     Content-Security-Policy = "default-src 'self'; script-src 'self' 'nonce-{{nonce}}'; object-src 'none'; img-src 'self' https://trusted-images.example.com; connect-src 'self';"
 
 [[plugins]]
