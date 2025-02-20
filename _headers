@@ -1,2 +1,0 @@
-/*
-  Content-Security-Policy: img-src 'self' blob: data:; script-src 'sha256-test'
