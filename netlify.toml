@@ -1,5 +1,2 @@
 [[plugins]]
   package = "/plugins/netlify-plugin-csp"
-
-[[plugins]]
-  package = "@netlify/plugin-csp-nonce"
