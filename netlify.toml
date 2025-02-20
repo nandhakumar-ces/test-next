@@ -1,7 +1,4 @@
-[[plugins]]
-  package = "@netlify/plugin-csp-nonce"
-
 [[headers]]
   for = "/*"
-[headers.values]
-  Content-Security-Policy = "default-src 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline';"  
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline';"  
