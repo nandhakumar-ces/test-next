@@ -25,6 +25,12 @@ export default async function RootLayout({
   
   return (
     <html lang="en">
+       <head>
+          <meta
+            httpEquiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self' https://trusted-scripts.com;"
+          />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
